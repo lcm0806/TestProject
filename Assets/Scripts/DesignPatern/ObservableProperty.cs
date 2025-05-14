@@ -3,43 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ObservableProperty<T>
+namespace DesignPattern
 {
-    [SerializeField] private T _value;
-    public T Value
+    public class ObservableProperty<T>
     {
-        get => _value;
-        set
+        [SerializeField] private T _value;
+        public T Value
         {
-            if(_value.Equals(value)) return;
-            _value = value;
-            Notify();
+            get => _value;
+            set
+            {
+                if (_value.Equals(value)) return;
+                _value = value;
+                Notify();
+            }
         }
-    }
-    private UnityEvent<T> _onValueChanged = new();
-    
-    public ObservableProperty(T value = default)
-    {
-        _value = value;
-    }
-    public void Subscribe(UnityAction<T> action)
-    {
-        _onValueChanged.AddListener(action);
-    }
+        private UnityEvent<T> _onValueChanged = new();
 
-    public void Unsubscribe(UnityAction<T> action)
-    {
-        _onValueChanged.RemoveListener(action);
-    }
+        public ObservableProperty(T value = default)
+        {
+            _value = value;
+        }
+        public void Subscribe(UnityAction<T> action)
+        {
+            _onValueChanged.AddListener(action);
+        }
 
-    public void UnsbscribeAll()
-    {
-        _onValueChanged.RemoveAllListeners();
-    }
+        public void Unsubscribe(UnityAction<T> action)
+        {
+            _onValueChanged.RemoveListener(action);
+        }
 
-    private void Notify()
-    {
-        _onValueChanged?.Invoke(Value);
-    }
+        public void UnsbscribeAll()
+        {
+            _onValueChanged.RemoveAllListeners();
+        }
 
+        private void Notify()
+        {
+            _onValueChanged?.Invoke(Value);
+        }
+
+    }
 }
